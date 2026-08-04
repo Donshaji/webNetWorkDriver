@@ -1,0 +1,7 @@
+# Visual Studio local files & build outputs
+
+.vs/
+
+bin/
+
+obj/
