@@ -15,19 +15,25 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4">
                 <StackPanel Orientation="Horizontal" Margin="3,0">
                     <TextBlock Text="Host" Margin="3,0"/>
-                    <TextBox Width="90" ></TextBox>
+                    <TextBox Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}" Width="90"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="3,0">
-                    <TextBlock Text="Port" Margin="3,0"/>
-                    <TextBox Width="90" ></TextBox>
+                    <TextBlock Text="Port"  Margin="3,0"/>
+                    <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" Width="90"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="3,0">
                     <TextBlock Text="Path" Margin="3,0"/>
-                    <TextBox Width="90" ></TextBox>
+                    <TextBox Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" Width="90"/>
                 </StackPanel>
-                <Button Content="Fetch" Margin="4,0"/>
+                <Button Content="Fetch" Margin="4,0" Command="{Binding FetchCommand}"/>
                 </StackPanel>
         </Grid>
-        <Grid Grid.Row="1" Background="AntiqueWhite"></Grid>
+        <Grid Grid.Row="1" Background="AntiqueWhite">
+            <TextBox Text="{Binding Response}"
+             TextWrapping="Wrap"
+             VerticalScrollBarVisibility="Auto"
+             FontFamily="Consolas"
+             Margin="4"/>
+        </Grid>
     </Grid>
 </Window>
