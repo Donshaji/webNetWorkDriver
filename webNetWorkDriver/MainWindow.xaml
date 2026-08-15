@@ -26,7 +26,7 @@
                     <TextBox Width="90" ></TextBox>
                 </StackPanel>
                 <Button Content="Fetch" Margin="4,0"/>
-            </StackPanel>
+                </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Background="AntiqueWhite"></Grid>
     </Grid>
