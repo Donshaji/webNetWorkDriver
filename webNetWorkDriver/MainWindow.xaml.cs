@@ -10,6 +10,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using webNetWorkDriver.model;
+using webNetWorkDriver.View;
 using webNetWorkDriver.ViewModel;
 
 
@@ -20,10 +21,19 @@ namespace webNetWorkDriver
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly CssService _cssService = new CssService();
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
+            DataContext = new MainViewModel(_cssService);
         }
+        // Add a button click handler to open StyleViewerWindow
+        private void OpenStyleViewer_Click(object sender, RoutedEventArgs e)
+        {
+            var styleViewerVm = new StyleViewerViewModel(_cssService);
+            var styleViewerWindow = new StyleViewer(styleViewerVm);
+            styleViewerWindow.Show();
+        }
+
     }
 }

@@ -26,7 +26,8 @@
                     <TextBox Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" Width="90"/>
                 </StackPanel>
                 <Button Content="Fetch" Margin="4,0" Command="{Binding FetchCommand}"/>
-                </StackPanel>
+                <Button Content="CSS" Margin="4,0" Click="OpenStyleViewer_Click"/>
+            </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Background="AntiqueWhite">
             <TextBox Text="{Binding Response}"

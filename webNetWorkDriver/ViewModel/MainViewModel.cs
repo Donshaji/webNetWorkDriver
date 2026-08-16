@@ -13,23 +13,32 @@ namespace webNetWorkDriver.ViewModel
         public partial class MainViewModel : ObservableObject
         {
             private readonly TcpFetcher _fetcher = new TcpFetcher();
+            private readonly CssService _cssService;
 
-            [ObservableProperty]
-            private string host = "example.com";
+        [ObservableProperty]
+        private string host = "example.com";
 
-            [ObservableProperty]
-            private int port = 80;
+        [ObservableProperty]
+        private int port = 80;
 
-            [ObservableProperty]
-            private string path = "/";
+        [ObservableProperty]
+        private string path = "/";
 
-            [ObservableProperty]
-            private string response;
+        [ObservableProperty]
+        private string response;
 
-            [ObservableProperty]
-            private bool isBusy;
+        [ObservableProperty]
+        private bool isBusy;
 
-            [RelayCommand]
+        [ObservableProperty]
+        private string cssContent;
+
+        public MainViewModel(CssService cssService)
+        {
+            _cssService = cssService;
+        }
+
+        [RelayCommand]
             private async Task Fetch()
             {
                 try
@@ -37,7 +46,9 @@ namespace webNetWorkDriver.ViewModel
                     IsBusy = true;
                     Response = "Connecting...";
                     Response =await _fetcher.FetchAsync(Host, Port, Path);
-                }
+                    string htmlBody = _fetcher.GetHtmlBody(Response);
+                    string css = _fetcher.ExtractCss(Response);
+            }
                 catch (Exception ex)
                 {
                     Response = $"Error: {ex.Message}";
