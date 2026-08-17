@@ -27,6 +27,7 @@
                 </StackPanel>
                 <Button Content="Fetch" Margin="4,0" Command="{Binding FetchCommand}"/>
                 <Button Content="CSS" Margin="4,0" Click="OpenStyleViewer_Click"/>
+                <Button Content="MetaData" Margin="4,0" />
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Background="AntiqueWhite">
