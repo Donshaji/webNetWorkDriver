@@ -5,37 +5,115 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:webNetWorkDriver"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Style="{StaticResource DarkWindow}"
+        Title="webNetWorkDriver" Height="560" Width="920"
+        MinWidth="700" MinHeight="400"
+        WindowStartupLocation="CenterScreen">
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Background="AliceBlue">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4">
-                <StackPanel Orientation="Horizontal" Margin="3,0">
-                    <TextBlock Text="Host" Margin="3,0"/>
-                    <TextBox Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}" Width="90"/>
+
+        <!-- ═══════════════ TOOLBAR ═══════════════ -->
+        <Border Grid.Row="0"
+                Background="{StaticResource BgCardBrush}"
+                BorderBrush="{StaticResource BorderSubtleBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="16,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Input fields -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Host -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,12,0">
+                        <TextBlock Text="HOST" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource InputBox}" Width="160"/>
+                    </StackPanel>
+
+                    <!-- Port -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,12,0">
+                        <TextBlock Text="PORT" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource InputBox}" Width="65"/>
+                    </StackPanel>
+
+                    <!-- Path -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
+                        <TextBlock Text="PATH" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource InputBox}" Width="120"/>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="3,0">
-                    <TextBlock Text="Port"  Margin="3,0"/>
-                    <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" Width="90"/>
+
+                <!-- Action buttons -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="⚡ Fetch"
+                            Style="{StaticResource PrimaryButton}"
+                            Command="{Binding FetchCommand}"
+                            Margin="0,0,8,0"/>
+                    <Button Content="🎨 CSS"
+                            Style="{StaticResource GhostButton}"
+                            Click="OpenStyleViewer_Click"
+                            Margin="0,0,8,0"/>
+                    <Button Content="📋 MetaData"
+                            Style="{StaticResource GhostButton}"
+                            Click="OpenMetaDataViewer_Click"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="3,0">
-                    <TextBlock Text="Path" Margin="3,0"/>
-                    <TextBox Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" Width="90"/>
-                </StackPanel>
-                <Button Content="Fetch" Margin="4,0" Command="{Binding FetchCommand}"/>
-                <Button Content="CSS" Margin="4,0" Click="OpenStyleViewer_Click"/>
-                <Button Content="MetaData" Margin="4,0" Click="OpenMetaDataViewer_Click"/>
-            </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ═══════════════ RESPONSE AREA ═══════════════ -->
+        <Grid Grid.Row="1" Margin="16,12,16,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Text="Response"
+                       Style="{StaticResource SectionHeader}"/>
+
+            <TextBox Grid.Row="1"
+                     Text="{Binding Response}"
+                     Style="{StaticResource CodeBox}"/>
         </Grid>
-        <Grid Grid.Row="1" Background="AntiqueWhite">
-            <TextBox Text="{Binding Response}"
-             TextWrapping="Wrap"
-             VerticalScrollBarVisibility="Auto"
-             FontFamily="Consolas"
-             Margin="4"/>
-        </Grid>
+
+        <!-- ═══════════════ STATUS BAR ═══════════════ -->
+        <Border Grid.Row="2" Style="{StaticResource StatusBar}">
+            <Grid>
+                <TextBlock HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontSize="11">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsBusy}" Value="True">
+                                    <Setter Property="Text" Value="⏳  Fetching…"/>
+                                    <Setter Property="Foreground" Value="#FFFBBF24"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsBusy}" Value="False">
+                                    <Setter Property="Text" Value="✓  Ready"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <TextBlock HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Foreground="{StaticResource TextSecondaryBrush}"
+                           FontSize="11"
+                           Text="webNetWorkDriver v0.1"/>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
