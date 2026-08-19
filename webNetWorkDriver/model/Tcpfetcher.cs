@@ -1,4 +1,4 @@
-﻿using System.Net.Sockets;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -6,10 +6,12 @@ namespace webNetWorkDriver.model
 {
     public class TcpFetcher
     {
-        public async Task<string> FetchAsync(string host, int port, string path)
+        public async Task<string> FetchAsync(string host, int port, string path, int timeoutSeconds = 10)
         {
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutSeconds));
+
             using var client = new TcpClient();
-            await client.ConnectAsync(host, port);
+            await client.ConnectAsync(host, port, cts.Token);
             using var stream = client.GetStream();
 
             string request =
@@ -19,10 +21,10 @@ namespace webNetWorkDriver.model
                 "\r\n";
 
             byte[] requestBytes = Encoding.ASCII.GetBytes(request);
-            await stream.WriteAsync(requestBytes, 0, requestBytes.Length);
+            await stream.WriteAsync(requestBytes, cts.Token);
 
             using var reader = new System.IO.StreamReader(stream, Encoding.UTF8);
-            string response = await reader.ReadToEndAsync();
+            string response = await reader.ReadToEndAsync(cts.Token);
 
             return response;
         }

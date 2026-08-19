@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,10 +22,11 @@ namespace webNetWorkDriver
     public partial class MainWindow : Window
     {
         private readonly CssService _cssService = new CssService();
+        private readonly MetaDataService _metaDataService = new MetaDataService();
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel(_cssService);
+            DataContext = new MainViewModel(_cssService, _metaDataService);
         }
         // Add a button click handler to open StyleViewerWindow
         private void OpenStyleViewer_Click(object sender, RoutedEventArgs e)
@@ -33,6 +34,13 @@ namespace webNetWorkDriver
             var styleViewerVm = new StyleViewerViewModel(_cssService);
             var styleViewerWindow = new StyleViewer(styleViewerVm);
             styleViewerWindow.Show();
+        }
+
+        private void OpenMetaDataViewer_Click(object sender, RoutedEventArgs e)
+        {
+            var metaDataViewerVm = new MetaDataViewerViewModel(_metaDataService);
+            var metaDataViewerWindow = new MetaDataViewer(metaDataViewerVm);
+            metaDataViewerWindow.Show();
         }
 
     }

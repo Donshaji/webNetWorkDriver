@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,7 @@ namespace webNetWorkDriver.ViewModel
         {
             private readonly TcpFetcher _fetcher = new TcpFetcher();
             private readonly CssService _cssService;
+            private readonly MetaDataService _metaDataService;
 
         [ObservableProperty]
         private string host = "example.com";
@@ -25,17 +26,18 @@ namespace webNetWorkDriver.ViewModel
         private string path = "/";
 
         [ObservableProperty]
-        private string response;
+        private string response = string.Empty;
 
         [ObservableProperty]
         private bool isBusy;
 
         [ObservableProperty]
-        private string cssContent;
+        private string cssContent = string.Empty;
 
-        public MainViewModel(CssService cssService)
+        public MainViewModel(CssService cssService, MetaDataService metaDataService)
         {
             _cssService = cssService;
+            _metaDataService = metaDataService;
         }
 
         [RelayCommand]
@@ -45,10 +47,17 @@ namespace webNetWorkDriver.ViewModel
                 {
                     IsBusy = true;
                     Response = "Connecting...";
-                    Response =await _fetcher.FetchAsync(Host, Port, Path);
+                    Response = await _fetcher.FetchAsync(Host, Port, Path);
                     string htmlBody = _fetcher.GetHtmlBody(Response);
-                    string css = _fetcher.ExtractCss(Response);
+                    string css = _fetcher.ExtractCss(htmlBody);
+                    _cssService.CssContent = css;
+                    string metaData = _fetcher.ExtractAllMetadata(htmlBody);
+                    _metaDataService.MetaDataContent = metaData;
             }
+                catch (OperationCanceledException)
+                {
+                    Response = $"Error: Connection to {Host}:{Port} timed out.";
+                }
                 catch (Exception ex)
                 {
                     Response = $"Error: {ex.Message}";
