@@ -6,13 +6,22 @@ namespace webNetWorkDriver.model
 {
     public class TcpFetcher
     {
-        public async Task<string> FetchAsync(string host, int port, string path, int timeoutSeconds = 10)
+        public async Task<string> FetchAsync(string host, int port, string path, bool isHttps = false, int timeoutSeconds = 10)
         {
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutSeconds));
 
             using var client = new TcpClient();
             await client.ConnectAsync(host, port, cts.Token);
             using var stream = client.GetStream();
+
+            Stream networkStream = stream;
+            if (isHttps)
+            {
+                var sslStream = new System.Net.Security.SslStream(stream, false, 
+                    (sender, certificate, chain, sslPolicyErrors) => true, null);
+                await sslStream.AuthenticateAsClientAsync(host);
+                networkStream = sslStream;
+            }
 
             string request =
                 $"GET {path} HTTP/1.1\r\n" +
@@ -21,9 +30,9 @@ namespace webNetWorkDriver.model
                 "\r\n";
 
             byte[] requestBytes = Encoding.ASCII.GetBytes(request);
-            await stream.WriteAsync(requestBytes, cts.Token);
+            await networkStream.WriteAsync(requestBytes, cts.Token);
 
-            using var reader = new System.IO.StreamReader(stream, Encoding.UTF8);
+            using var reader = new System.IO.StreamReader(networkStream, Encoding.UTF8);
             string response = await reader.ReadToEndAsync(cts.Token);
 
             return response;

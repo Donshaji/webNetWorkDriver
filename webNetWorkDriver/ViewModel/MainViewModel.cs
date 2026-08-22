@@ -23,6 +23,9 @@ namespace webNetWorkDriver.ViewModel
         private int port = 80;
 
         [ObservableProperty]
+        private bool isHttps = false;
+
+        [ObservableProperty]
         private string path = "/";
 
         [ObservableProperty]
@@ -47,7 +50,7 @@ namespace webNetWorkDriver.ViewModel
                 {
                     IsBusy = true;
                     Response = "Connecting...";
-                    Response = await _fetcher.FetchAsync(Host, Port, Path);
+                    Response = await _fetcher.FetchAsync(Host, Port, Path, IsHttps);
                     string htmlBody = _fetcher.GetHtmlBody(Response);
                     string css = _fetcher.ExtractCss(htmlBody);
                     _cssService.CssContent = css;
